@@ -1,0 +1,8 @@
+<ng-container *ngFor="let song of playlist?.getSongs()">
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>{{song?.getNombre()}}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-song-info [song]="song"></app-song-info>
+    </mat-expansion-panel>
+</ng-container>
