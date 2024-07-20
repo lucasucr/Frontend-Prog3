@@ -8,6 +8,6 @@ import { Song } from 'src/model/Song';
 })
 export class SongInfoComponent {
 
-  @Input() song?: Song
+  @Input() song?: Song;
 
 }

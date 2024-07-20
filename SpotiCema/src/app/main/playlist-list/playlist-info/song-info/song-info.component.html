@@ -1,5 +1,9 @@
-<div>
-    <h3>{{song?.getNombre()}}</h3>
-    <p>{{song?.getArtista()}}</p>
-    <p>{{song?.getAlbum()}}</p>
+<div class="card text-bg-light border-info mb-4 rounded-3 shadow-sm">
+    <div class="card-body">
+        <ul class="list-unstyled mt-3 mb-4">
+            <li>Nombre: {{song?.getNombre()}}</li>
+            <li>Artista: {{song?.getArtista()}}</li>
+            <li>Album: {{song?.getAlbum()}}</li>
+        </ul>
+    </div>
 </div>

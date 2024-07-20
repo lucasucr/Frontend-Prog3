@@ -1,8 +1,90 @@
-<ng-container *ngFor="let playlist of playlists">
-    <mat-expansion-panel>
-        <mat-expansion-panel-header>
-            <mat-panel-title>{{playlist?.getNombre()}}</mat-panel-title>
-        </mat-expansion-panel-header>
-        <app-playlist-info [playlist]="playlist"></app-playlist-info>
-    </mat-expansion-panel>
-</ng-container>
+<div class=" mb-3 d-flex justify-content-between">
+    <div>
+      <h5 class="fw-normal mb-3">Listado de todas las playlists disponibles:</h5>
+    </div>
+    <div>
+      <button type="button" class="btn btn-info text-white border-primary" data-bs-toggle="modal"
+        data-bs-target="#newPlaylistModal">
+        Agregar nueva playlist
+      </button>
+    </div>
+
+    <div class="modal fade" id="newPlaylistModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Nueva Playlist</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="newPlaylistForm" (ngSubmit)="onSubmit()">
+                <div class="mb-3">
+                  <label for="nombreInput" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="nombreInput" placeholder="Mi musica" required
+                    formControlName="nombre">
+                </div>
+                <div class="mb-3">
+                  <label for="songInput" class="form-label">Cancion</label>
+                  <select class="form-select" aria-label="Default select example" id="songInput" required
+                    formControlName="song1">
+                    <ng-container *ngFor="let song of allSongs">
+                        <option [value]="song.getNombre()">{{song?.getNombre()}}</option>
+                    </ng-container>
+                  </select>
+                </div>
+                <div class="mb-3">
+                    <label for="moreSongsInput">Desea Ingresar Mas Canciones?</label>
+                    <select class="form-select" aria-label="Default select example" id="moreSongsInput" required formControlName="moreSongs">
+                        <option [ngValue]="true">Si</option>
+                        <option [ngValue]="false">No</option>
+                    </select>
+                </div>
+                <ng-container *ngIf="moreSongs">
+                    <div class="mb-3">
+                      <label for="amountMoreSongsInput">Cuantas Canciones Desea Agregar?</label>
+                      <select class="form-select" aria-label="Default select example" id="amountMoreSongsInput" required formControlName="amountMoreSongs">
+                        <ng-container *ngFor="let option of moreSongsOptions">
+                          <option [value]="option">{{option}}</option>
+                        </ng-container>
+                      </select>
+                    </div>
+                    <div formArrayName="additionalSongs">
+                      <div *ngFor="let songCtrl of additionalSongsArray.controls; let i = index" [formGroupName]="i" class="mb-3">
+                        <label for="songInput{{i+1}}" class="form-label">Cancion {{i + 2}}</label>
+                        <select class="form-select" aria-label="Default select example" id="songInput{{i+1}}" required [formControlName]="i">
+                          <ng-container *ngFor="let song of allSongs">
+                            <option [value]="song.getNombre()">{{song?.getNombre()}}</option>
+                          </ng-container>
+                        </select>
+                      </div>
+                    </div>
+                  </ng-container>
+  
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-outline-success" data-bs-dismiss="modal">Save changes</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+<div class="accordion" id="accordionPlaylists">
+    <ng-container *ngFor="let playlist of playlists">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#' + playlist?.getNombre()" [attr.aria-controls]="playlist?.getNombre()" aria-expanded="false">
+                    {{playlist?.getNombre()}}
+                </button>
+            </h2>
+            <div [id]="playlist.getNombre()" class="accordion-collapse collapse" data-bs-parent="#accordionPlaylists">
+                <div class="accordion-body">
+                    <app-playlist-info [playlist]="playlist"></app-playlist-info>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>

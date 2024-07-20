@@ -8,6 +8,6 @@ import { Usuario } from 'src/model/Usuario';
 })
 export class WelcomeCardComponent {
 
-  @Input() usuario?: Usuario
+  @Input() usuario?: Usuario;
 
 }
