@@ -36,29 +36,17 @@ export class PlaylistListComponent implements OnChanges {
   ngOnInit(){
     this.updateTotalSongAmountSelectable();
     this.generateOptions();
-    this.setupFormListeners();
-  }
-
-  setupFormListeners() {
-    this.newPlaylistForm.get('moreSongs')?.valueChanges.subscribe(value => {
-      this.moreSongsSelected = value;
-      this.onOptionChange();
-    });
-
-    this.newPlaylistForm.get('amountMoreSongs')?.valueChanges.subscribe(value => {
-      this.amountMoreSongs = value;
-      this.updateSongSelections();
-    });
   }
 
   updateSongSelections() {
+    console.log(this.amountMoreSongs);
     const additionalSongsArray = this.newPlaylistForm.get('additionalSongs') as FormArray;
+    console.log('alo: ' + additionalSongsArray.value);
     additionalSongsArray.clear(); // Clear previous controls
   
     for (let i = 0; i < this.amountMoreSongs; i++) {
       additionalSongsArray.push(new FormControl('')); // Add new controls
     }
-    console.log(additionalSongsArray.value);
   }
 
   onOptionChange() {
@@ -98,7 +86,6 @@ export class PlaylistListComponent implements OnChanges {
 
     // Mapeo los nombres de las canciones adicionales y hago lo mismo
     const additionalSongsNames = additionalSongsArray.controls.map(control => control.value);
-    console.log(additionalSongsNames);
     const additionalSongs = additionalSongsNames
     .map(name => this.allSongs?.find(song => song.getNombre() === name))
     .filter((song): song is Song => song !== undefined);

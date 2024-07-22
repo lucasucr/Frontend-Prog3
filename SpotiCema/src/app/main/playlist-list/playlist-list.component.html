@@ -34,7 +34,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="moreSongsInput">Desea Ingresar Mas Canciones?</label>
-                    <select class="form-select" aria-label="Default select example" id="moreSongsInput" required formControlName="moreSongs">
+                    <select class="form-select" aria-label="Default select example" id="moreSongsInput" required formControlName="moreSongs" [(ngModel)]="moreSongsSelected" (ngModelChange)="onOptionChange()">
                         <option [ngValue]="true">Si</option>
                         <option [ngValue]="false">No</option>
                     </select>
@@ -42,14 +42,14 @@
                 <ng-container *ngIf="moreSongs">
                     <div class="mb-3">
                       <label for="amountMoreSongsInput">Cuantas Canciones Desea Agregar?</label>
-                      <select class="form-select" aria-label="Default select example" id="amountMoreSongsInput" required formControlName="amountMoreSongs">
+                      <select class="form-select" aria-label="Default select example" id="amountMoreSongsInput" required formControlName="amountMoreSongs" [(ngModel)]="amountMoreSongs" (ngModelChange)="updateSongSelections()">
                         <ng-container *ngFor="let option of moreSongsOptions">
-                          <option [value]="option">{{option}}</option>
+                          <option [ngValue]="option">{{option}}</option>
                         </ng-container>
                       </select>
                     </div>
                     <div formArrayName="additionalSongs">
-                      <div *ngFor="let songCtrl of additionalSongsArray.controls; let i = index" [formGroupName]="i" class="mb-3">
+                      <div *ngFor="let songCtrl of additionalSongsArray.controls; let i = index" class="mb-3">
                         <label for="songInput{{i+1}}" class="form-label">Cancion {{i + 2}}</label>
                         <select class="form-select" aria-label="Default select example" id="songInput{{i+1}}" required [formControlName]="i">
                           <ng-container *ngFor="let song of allSongs">
