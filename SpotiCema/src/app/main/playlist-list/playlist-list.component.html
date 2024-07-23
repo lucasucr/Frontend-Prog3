@@ -71,20 +71,27 @@
       </div>
     </div>
 
+    <div class="row m-3">
+      <input type="text" class="form-control" placeholder="Buscar playlist..." [(ngModel)]="filtro"
+        (ngModelChange)="changeFiltro()" >
+    </div>
+
 
 <div class="accordion" id="accordionPlaylists">
     <ng-container *ngFor="let playlist of playlists">
+      <ng-container *ngIf="playlist.getNombre().toLowerCase().startsWith(filtro.toLowerCase()) || playlist.getPublisher().getNombre().toLowerCase().startsWith(filtro.toLowerCase())">
         <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#' + playlist?.getNombre()" [attr.aria-controls]="playlist?.getNombre()" aria-expanded="false">
-                    {{playlist?.getNombre()}}
-                </button>
-            </h2>
-            <div [id]="playlist.getNombre()" class="accordion-collapse collapse" data-bs-parent="#accordionPlaylists">
-                <div class="accordion-body">
-                    <app-playlist-info [playlist]="playlist"></app-playlist-info>
-                </div>
-            </div>
-        </div>
+          <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#' + playlist?.getNombre()" [attr.aria-controls]="playlist?.getNombre()" aria-expanded="false">
+                  {{playlist?.getNombre()}}
+              </button>
+          </h2>
+          <div [id]="playlist.getNombre()" class="accordion-collapse collapse" data-bs-parent="#accordionPlaylists">
+              <div class="accordion-body">
+                  <app-playlist-info [playlist]="playlist"></app-playlist-info>
+              </div>
+          </div>
+      </div>
+      </ng-container>
     </ng-container>
 </div>

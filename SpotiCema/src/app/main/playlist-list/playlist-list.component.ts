@@ -22,6 +22,7 @@ export class PlaylistListComponent implements OnChanges {
   moreSongsOptions:number[] = [];
   moreSongsSelections:number[] = [];
   newPlaylistForm: FormGroup;
+  filtro: string = '';
 
   constructor(private fb: FormBuilder) {
     this.newPlaylistForm = this.fb.group({
@@ -36,6 +37,10 @@ export class PlaylistListComponent implements OnChanges {
   ngOnInit(){
     this.updateTotalSongAmountSelectable();
     this.generateOptions();
+  }
+
+  changeFiltro() {
+    console.log(this.filtro);
   }
 
   updateSongSelections() {
