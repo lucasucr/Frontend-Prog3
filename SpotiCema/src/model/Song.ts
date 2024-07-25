@@ -1,12 +1,22 @@
 export class Song{
+    private id: number;
     private nombre: string;
     private artista: string;
     private album: string;
 
-    constructor(nombre: string, artista: string, album: string){
+    constructor(id: number, nombre: string, artista: string, album: string){
+        this.id = id;
         this.nombre = nombre;
         this.artista = artista;
         this.album = album;
+    }
+
+    getId(): number { 
+        return this.id; 
+    }
+
+    setId(id: number): void {
+        this.id = id;
     }
 
     getNombre(): string{

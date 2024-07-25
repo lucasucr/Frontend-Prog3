@@ -1,15 +1,28 @@
-import { Usuario } from "./Usuario";
+import { Publisher } from "./Publisher";
+import { Listener } from "./Listener";
 import { Song } from "./Song";
 
 export class Playlist{
+    private id: number;
     private nombre: string;
-    private publisher: Usuario;
+    private publisher: Publisher;
+    private playlistListeners: Listener[];
     private songs: Song[];
 
-    constructor(nombre: string, publisher: Usuario, songs: Song[]){
+    constructor(id: number, nombre: string, publisher: Publisher, songs: Song[], listeners: Listener[]){
+        this.id = id;
         this.nombre = nombre;
         this.publisher = publisher;
         this.songs = songs;
+        this.playlistListeners = listeners;
+    }
+
+    getId(): number { 
+        return this.id; 
+    }
+
+    setId(id: number): void {
+        this.id = id;
     }
 
     getNombre(): string{
@@ -20,12 +33,20 @@ export class Playlist{
         this.nombre = nombre;
     }
 
-    getPublisher(): Usuario{
+    getPublisher(): Publisher{
         return this.publisher;
     }
 
-    setPublisher(publisher: Usuario){
+    setPublisher(publisher: Publisher){
         this.publisher = publisher;
+    }
+
+    getPlaylistListeners(): Listener[]{
+        return this.playlistListeners;
+    }
+
+    setPlaylistListeners(listeners: Listener[]): void{
+        this.playlistListeners = listeners;
     }
 
     getSongs(): Song[]{
