@@ -72,33 +72,48 @@
       </div>
     </div>
 
-    <div class="row mb-3">
-      <div class="mx-auto col-10 col-md-8 col-lg-6">
-      <form [formGroup]="addSongForm" (ngSubmit)="addSong()">
-        <h1 class="h3 mb-3 fw-normal">Nueva Cancion</h1>
-    
-        <div class="mb-3">
-          <label for="nameInput" class="form-label">Nombre</label>
-          <input type="text" class="form-control" id="nameInput" placeholder="One" required
-            formControlName="name">
+    <button type="button" class="btn btn-info text-white border-primary" data-bs-toggle="modal"
+        data-bs-target="#newSongModal">
+        Agregar nueva cancion
+      </button>
+
+      <div class="modal fade" id="newSongModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Nueva Cancion</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row mb-3">
+                <div class="mx-auto col-10 col-md-8 col-lg-6">
+                <form [formGroup]="addSongForm" (ngSubmit)="addSong()">
+                  <div class="mb-3">
+                    <label for="nameInput" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nameInput" placeholder="One" required
+                      formControlName="name">
+                  </div>
+                  <div class="mb-3">
+                    <label for="artistInput" class="form-label">Artista</label>
+                    <input type="text" class="form-control" id="artistInput" placeholder="Metallica" required
+                      formControlName="artist">
+                  </div>
+                  <div class="mb-3">
+                    <label for="albumInput" class="form-label">Album</label>
+                    <input type="text" class="form-control" id="albumInput" placeholder="...And Justice For All" required
+                      formControlName="album">
+                  </div>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Guardar Cancion</button>
+                  </div>
+                  
+                </form>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="mb-3">
-          <label for="artistInput" class="form-label">Artista</label>
-          <input type="text" class="form-control" id="artistInput" placeholder="Metallica" required
-            formControlName="artist">
-        </div>
-        <div class="mb-3">
-          <label for="albumInput" class="form-label">Album</label>
-          <input type="text" class="form-control" id="albumInput" placeholder="...And Justice For All" required
-            formControlName="album">
-        </div>
-        <div class="text-center">
-          <button type="submit" class="btn btn-primary">Guardar Cancion</button>
-        </div>
-        
-      </form>
       </div>
-    </div>
 
     <div class="row m-3">
       <input type="text" class="form-control" placeholder="Buscar playlist..." [(ngModel)]="filtro"
@@ -117,6 +132,82 @@
           </h2>
           <div [id]="playlist.getNombre()" class="accordion-collapse collapse" data-bs-parent="#accordionPlaylists">
               <div class="accordion-body">
+
+                <div>
+                  <button type="button" class="btn btn-info text-white border-primary" data-bs-toggle="modal"
+                    data-bs-target="#addSongToPlaylistModal" (click)="setPlaylistSelected(playlist)">
+                    Agregar Cancion a Playlist
+                  </button>
+                </div>
+                <div>
+                  <button type="button" class="btn btn-info text-white border-primary" data-bs-toggle="modal"
+                    data-bs-target="#editPlaylistModal" (click)="setPlaylistSelected(playlist)">
+                    Editar Playlist
+                  </button>
+                </div>
+                <div>
+                  <button type="button" class="btn btn-info text-white border-primary" (click)="deletePlaylist(playlist)">
+                    Eliminar playlist
+                  </button>
+                </div>
+            
+                <div class="modal fade" id="addSongToPlaylistModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Cancion a Playlist</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form [formGroup]="addToPlaylistForm" (ngSubmit)="addToPlaylist()">
+                          <div class="mb-3">
+                            <label for="songInput" class="form-label">Cancion</label>
+                            <select class="form-select" aria-label="Default select example" id="songInput" required
+                              formControlName="songName">
+                              <ng-container *ngFor="let song of allSongs">
+                                  <option [value]="song.getNombre()">{{song?.getNombre()}}</option>
+                              </ng-container>
+                            </select>
+                          </div>
+            
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-outline-success" data-bs-dismiss="modal">Save changes</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal fade" id="editPlaylistModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Nueva Cancion</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row mb-3">
+                          <div class="mx-auto col-10 col-md-8 col-lg-6">
+                          <form [formGroup]="editPlaylistForm" (ngSubmit)="editPlaylist()">
+                            <div class="mb-3">
+                              <label for="nameInput" class="form-label">Nombre</label>
+                              <input type="text" class="form-control" id="nameInput" placeholder="playlist.getNombre()" required
+                                formControlName="name">
+                            </div>
+                            <div class="text-center">
+                              <button type="submit" class="btn btn-primary">Guardar Datos</button>
+                            </div>
+                            
+                          </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                   <app-playlist-info [playlist]="playlist"></app-playlist-info>
               </div>
           </div>
@@ -139,7 +230,7 @@
       </button>
     </div>
 
-    <div class="modal fade" id="newPlaylistModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="listenPlaylistModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
@@ -167,6 +258,11 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="row m-3">
+    <input type="text" class="form-control" placeholder="Buscar playlist..." [(ngModel)]="filtro"
+      (ngModelChange)="changeFiltro()" >
   </div>
 
   <div class="accordion" id="accordionPlaylists">

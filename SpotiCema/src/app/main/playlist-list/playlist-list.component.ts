@@ -6,6 +6,7 @@ import { Usuario } from 'src/model/Usuario';
 import { PlaylistService } from 'src/services/playlist.service';
 import { UsuarioService } from 'src/services/usuario.service';
 import { SongService } from 'src/services/song.service';
+import { ApiService } from 'src/services/api.service';
 import { of, switchMap, forkJoin, map } from 'rxjs';
 import { Publisher } from 'src/model/Publisher';
 import { Listener } from 'src/model/Listener';
@@ -30,6 +31,8 @@ export class PlaylistListComponent implements OnChanges {
   moreSongsSelections:number[] = [];
   newPlaylistForm: FormGroup;
   filtro: string = '';
+  playlistSelected: any;
+  selectedPlaylist: any;
 
   listenPlaylistForm: FormGroup = new FormGroup({
     playlistToListen: new FormControl('', [Validators.required])
@@ -41,7 +44,15 @@ export class PlaylistListComponent implements OnChanges {
     album: new FormControl('', [Validators.required])
   })
 
-  constructor(private usuarioService: UsuarioService, private playlistService: PlaylistService, private songService: SongService, private fb: FormBuilder) {
+  addToPlaylistForm: FormGroup = new FormGroup({
+    songName: new FormControl('', [Validators.required])
+  })
+
+  editPlaylistForm: FormGroup = new FormGroup({
+    name: new FormControl('', [Validators.required])
+  })
+
+  constructor(private usuarioService: UsuarioService, private playlistService: PlaylistService, private songService: SongService, private apiService: ApiService, private fb: FormBuilder) {
     this.newPlaylistForm = this.fb.group({
       nombre: new FormControl('', [Validators.required]),
       song1: new FormControl({}, [Validators.required]),
@@ -140,6 +151,10 @@ export class PlaylistListComponent implements OnChanges {
     return this.newPlaylistForm.get('additionalSongs') as FormArray;
   }
 
+  setPlaylistSelected(playlist: Playlist) {
+    this.playlistSelected = playlist;
+  }
+
   onSubmit(){
     // Consigo el nombre de song1 y las adicionales
     const song1Name = this.newPlaylistForm.get('song1')?.value;
@@ -186,6 +201,50 @@ export class PlaylistListComponent implements OnChanges {
         this.addSongForm.reset();
       }, error => {
         console.error('Error creating song:', error);
+      });
+    }
+  }
+
+  addToPlaylist(){
+    const songToAdd = this.allSongs?.find(song => song.getNombre() === this.addToPlaylistForm.value.songName);
+
+    if(this.usuario){
+      this.playlistService.addSong(this.playlistSelected, songToAdd!).subscribe(() => {
+        this.playlistSelected.getSongs().push(songToAdd!);
+        this.addToPlaylistForm.reset();
+        this.playlistSelected = '';
+      }, error => {
+        console.error('Error adding to playlist:', error);
+      });
+    }
+  }
+
+  deletePlaylist(playlist: Playlist){
+    this.selectedPlaylist = playlist;
+
+    if(this.usuario){
+      this.apiService.deletePlaylist(this.selectedPlaylist).subscribe((ok: boolean) => {
+        if(ok){
+          console.log('Playlist deleted succesfully');
+          this.playlists = this.playlists.filter(playlist => playlist !== this.selectedPlaylist);
+          this.selectedPlaylist = '';
+        }
+        else{
+          console.log('Problem deleting playlist');
+        }
+      }, error => {
+        console.error('Error deleting playlist:', error);
+      });
+    }
+  }
+
+  editPlaylist(){
+    if(this.usuario){
+      this.apiService.putPlaylist(this.playlistSelected).subscribe(() => {
+        this.playlistSelected = '';
+        this.editPlaylistForm.reset();
+      }, error => {
+        console.error('Error editing playlist:', error);
       });
     }
   }
