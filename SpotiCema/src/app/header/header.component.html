@@ -13,6 +13,9 @@
             <ng-container *ngIf="isLogged">
                 <a class="me-3 py-2 link-body-emphasis text-decoration-none" (click)="cerrarSesion()">Cerrar sesión</a>
             </ng-container>
+            <ng-container *ngIf="!isLogged">
+                <a class="me-3 py-2 link-body-emphasis text-decoration-none" routerLink="register">Registrarse</a>
+            </ng-container>
         </nav>
     </div>
 </header>
