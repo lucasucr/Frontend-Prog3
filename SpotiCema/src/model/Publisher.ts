@@ -17,4 +17,8 @@ export class Publisher extends Usuario {
     setPlaylistsCreadas(playlists: Playlist[]): void{
         this.playlistsCreadas = playlists;
     }
+
+    override type(): string{
+        return "Publisher";
+    }
 }

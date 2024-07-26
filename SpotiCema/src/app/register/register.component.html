@@ -1,0 +1,66 @@
+<div class="login-page flex-centered">
+    <div class="login-box flex-centered">
+      <div class="login-box-panel">
+        <h1 class="login-title" style="margin-left: -70%;">Registro</h1>
+      </div>
+      <div class="login-box-panel">
+        <form [formGroup]="formRegistro" (ngSubmit)="submitFormRegistro()">
+          <div class="login-form-group">
+            <div>
+              <label for="role">Tipo De Usuario</label>
+              <select class="form-select" id="role" formControlName="role">
+                <option value="listener">Listener</option>
+                <option value="publisher">Publisher</option>
+              </select>
+            </div>
+            <br />
+            <label for="usernameField">Usuario</label>
+            <input
+              type="text"
+              class="form-control"
+              id="usernameField"
+              placeholder="Pepito1"
+              formControlName="username"
+            />
+          </div>
+          <div class="login-form-group">
+            <label for="passwordField">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="passwordField"
+              placeholder="Password"
+              formControlName="password"
+            />
+          </div>
+          <div class="login-form-group">
+            <label for="nameField">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nameField"
+              placeholder="josesito"
+              formControlName="name"
+            />
+          </div>
+          <div class="login-form-group">
+            <label for="surnameField">Apellido</label>
+            <input
+              type="text"
+              class="form-control"
+              id="surnameField"
+              placeholder="gonzalez"
+              formControlName="surname"
+            />
+          </div>
+          <br />
+          <div class="login-btn-container">
+            <button  class="login-button" type="submitFormRegistro" [disabled]="formRegistro.invalid">
+              Registrame
+            </button>
+          </div>
+          <div>{{ error }}</div>
+        </form>
+      </div>
+    </div>
+  </div>

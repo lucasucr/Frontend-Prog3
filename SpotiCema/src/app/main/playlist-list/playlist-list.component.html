@@ -1,6 +1,7 @@
-<div class=" mb-3 d-flex justify-content-between">
+<ng-container *ngIf="usuario?.type() === 'Publisher'">
+  <div class=" mb-3 d-flex justify-content-between">
     <div>
-      <h5 class="fw-normal mb-3">Listado de todas las playlists disponibles:</h5>
+      <h5 class="fw-normal mb-3">Listado de todas las playlists creadas:</h5>
     </div>
     <div>
       <button type="button" class="btn btn-info text-white border-primary" data-bs-toggle="modal"
@@ -71,6 +72,34 @@
       </div>
     </div>
 
+    <div class="row mb-3">
+      <div class="mx-auto col-10 col-md-8 col-lg-6">
+      <form [formGroup]="addSongForm" (ngSubmit)="addSong()">
+        <h1 class="h3 mb-3 fw-normal">Nueva Cancion</h1>
+    
+        <div class="mb-3">
+          <label for="nameInput" class="form-label">Nombre</label>
+          <input type="text" class="form-control" id="nameInput" placeholder="One" required
+            formControlName="name">
+        </div>
+        <div class="mb-3">
+          <label for="artistInput" class="form-label">Artista</label>
+          <input type="text" class="form-control" id="artistInput" placeholder="Metallica" required
+            formControlName="artist">
+        </div>
+        <div class="mb-3">
+          <label for="albumInput" class="form-label">Album</label>
+          <input type="text" class="form-control" id="albumInput" placeholder="...And Justice For All" required
+            formControlName="album">
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary">Guardar Cancion</button>
+        </div>
+        
+      </form>
+      </div>
+    </div>
+
     <div class="row m-3">
       <input type="text" class="form-control" placeholder="Buscar playlist..." [(ngModel)]="filtro"
         (ngModelChange)="changeFiltro()" >
@@ -95,3 +124,67 @@
       </ng-container>
     </ng-container>
 </div>
+</ng-container>
+
+<ng-container *ngIf="usuario?.type() === 'Listener'">
+
+  <div class=" mb-3 d-flex justify-content-between">
+    <div>
+      <h5 class="fw-normal mb-3">Listado de todas las playlists guardadas:</h5>
+    </div>
+    <div>
+      <button type="button" class="btn btn-info text-white border-primary" data-bs-toggle="modal"
+        data-bs-target="#listenPlaylistModal">
+        Guardar nueva playlist
+      </button>
+    </div>
+
+    <div class="modal fade" id="newPlaylistModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Escuchar Playlist</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="listenPlaylistForm" (ngSubmit)="listenPlaylist()">
+              <div class="mb-3">
+                <label for="playlistInput" class="form-label">Playlist</label>
+                <select class="form-select" aria-label="Default select example" id="songInput" required
+                  formControlName="playlistToListen">
+                  <ng-container *ngFor="let playlist of playlists">
+                      <option [value]="playlist.getNombre()">{{playlist?.getNombre()}}</option>
+                  </ng-container>
+                </select>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-outline-success" data-bs-dismiss="modal">Save changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion" id="accordionPlaylists">
+    <ng-container *ngFor="let playlist of playlistsListened">
+      <ng-container *ngIf="playlist.getNombre().toLowerCase().startsWith(filtro.toLowerCase()) || playlist.getPublisher().getNombre().toLowerCase().startsWith(filtro.toLowerCase())">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#' + playlist?.getNombre()" [attr.aria-controls]="playlist?.getNombre()" aria-expanded="false">
+                  {{playlist?.getNombre()}}
+              </button>
+          </h2>
+          <div [id]="playlist.getNombre()" class="accordion-collapse collapse" data-bs-parent="#accordionPlaylists">
+              <div class="accordion-body">
+                  <app-playlist-info [playlist]="playlist"></app-playlist-info>
+              </div>
+          </div>
+      </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-container>

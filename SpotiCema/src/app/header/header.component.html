@@ -7,6 +7,12 @@
         <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
             <a class="me-3 py-2 link-body-emphasis text-decoration-none" routerLink="profile">Mis Datos</a>
             <a class="me-3 py-2 link-body-emphasis text-decoration-none" routerLink="">Mis Playlists</a>
+            <ng-container *ngIf="!isLogged">
+                <a class="me-3 py-2 link-body-emphasis text-decoration-none" routerLink="login">Iniciar sesión</a>
+            </ng-container>
+            <ng-container *ngIf="isLogged">
+                <a class="me-3 py-2 link-body-emphasis text-decoration-none" (click)="cerrarSesion()">Cerrar sesión</a>
+            </ng-container>
         </nav>
     </div>
 </header>

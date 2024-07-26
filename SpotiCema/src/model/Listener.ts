@@ -17,4 +17,8 @@ export class Listener extends Usuario {
     setPlaylistsEscuchadas(playlists: Playlist[]): void{
         this.playlistsEscuchadas = playlists;
     }
+
+    override type(): string{
+        return "Listener";
+    }
 }

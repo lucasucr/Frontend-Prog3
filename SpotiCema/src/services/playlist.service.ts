@@ -16,6 +16,10 @@ export class PlaylistService {
     return this.apiService.postPlaylist(nombre, publisher, songs);
   }
 
+  obtenerPlaylists() {
+    return this.apiService.getAllPlaylists();
+  }
+
   addSong(playlist: Playlist, song: Song){
     return this.apiService.putAddSong(playlist, song);
   }

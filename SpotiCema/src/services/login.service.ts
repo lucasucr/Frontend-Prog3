@@ -14,6 +14,10 @@ export class LoginService {
 
   constructor(private apiService: ApiService) { }
 
+  getIsLoggedInObservable(): Observable<boolean> {
+    return this.loggedIn 
+  }
+
   login(username: any, password: any): Observable<boolean> {
     localStorage.setItem('user', btoa(username + ":" + password))
     const obs: Observable<boolean> = this.apiService.login(username, password);

@@ -51,4 +51,8 @@ export class Usuario {
     setPassword(password: string): void{
         this.password = password;
     }
+
+    type(): string {
+        return ''
+    }
 }

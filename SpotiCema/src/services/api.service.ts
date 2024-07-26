@@ -40,8 +40,8 @@ export class ApiService {
     return this.http.put<Usuario>(this._url + 'usuario', usuario);
   }
 
-  deleteUsuario(usuario: Usuario): Observable<void> {
-    return this.http.delete<void>(this._url + 'usuario', {
+  deleteUsuario(usuario: Usuario): Observable<boolean> {
+    return this.http.delete<boolean>(this._url + 'usuario', {
       body: usuario
     });
   }
@@ -63,8 +63,8 @@ export class ApiService {
     return this.http.put<Playlist>(this._url + 'playlist', playlist);
   }
 
-  deletePlaylist(playlist: Playlist): Observable<void>{
-    return this.http.delete<void>(this._url + 'playlist', {
+  deletePlaylist(playlist: Playlist): Observable<boolean>{
+    return this.http.delete<boolean>(this._url + 'playlist', {
       body: playlist
     });
   }
@@ -102,5 +102,29 @@ export class ApiService {
       username: username,
       password: password
     });
+  }
+
+  // SONG
+
+  postSong(nombre: string, artista: string, album: string): Observable<Song> {
+    return this.http.post<Song>(this._url + 'song', {
+      nombre,
+      artista,
+      album
+    })
+  }
+
+  putSong(song: Song): Observable<Song>{
+    return this.http.put<Song>(this._url + 'song', song);
+  }
+
+  deleteSong(song: Song): Observable<boolean>{
+    return this.http.delete<boolean>(this._url + 'song', {
+      body: song
+    });
+  }
+
+  getAllSongs() {
+    return this.http.get<Song[]>(this._url + 'song/all');
   }
 }

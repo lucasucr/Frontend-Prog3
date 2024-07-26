@@ -3,6 +3,12 @@ import { FormBuilder, FormControl, FormGroup, Validators, FormArray } from '@ang
 import { Playlist } from 'src/model/Playlist';
 import { Song } from 'src/model/Song';
 import { Usuario } from 'src/model/Usuario';
+import { PlaylistService } from 'src/services/playlist.service';
+import { UsuarioService } from 'src/services/usuario.service';
+import { SongService } from 'src/services/song.service';
+import { of, switchMap, forkJoin, map } from 'rxjs';
+import { Publisher } from 'src/model/Publisher';
+import { Listener } from 'src/model/Listener';
 
 @Component({
   selector: 'app-playlist-list',
@@ -11,9 +17,10 @@ import { Usuario } from 'src/model/Usuario';
 })
 export class PlaylistListComponent implements OnChanges {
 
-  @Input() playlists?: Array<Playlist>;
-  @Input() allSongs?: Array<Song>;
-  @Input() usuario?: Usuario
+  usuario?: Usuario
+  playlists: Playlist[] = [];
+  playlistsListened: Playlist[] = [];
+  allSongs: Song[] = [];
 
   moreSongs:boolean = false;
   moreSongsSelected:boolean = false;
@@ -24,19 +31,71 @@ export class PlaylistListComponent implements OnChanges {
   newPlaylistForm: FormGroup;
   filtro: string = '';
 
-  constructor(private fb: FormBuilder) {
+  listenPlaylistForm: FormGroup = new FormGroup({
+    playlistToListen: new FormControl('', [Validators.required])
+  })
+
+  addSongForm: FormGroup = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    artist: new FormControl('', [Validators.required]),
+    album: new FormControl('', [Validators.required])
+  })
+
+  constructor(private usuarioService: UsuarioService, private playlistService: PlaylistService, private songService: SongService, private fb: FormBuilder) {
     this.newPlaylistForm = this.fb.group({
-      nombre: new FormControl(''),
-      song1: new FormControl({}),
-      moreSongs: new FormControl(false),
-      amountMoreSongs: new FormControl(0), // Initialize with default value
-      additionalSongs: this.fb.array([])  // Initialize with an empty FormArray
+      nombre: new FormControl('', [Validators.required]),
+      song1: new FormControl({}, [Validators.required]),
+      moreSongs: new FormControl(false, [Validators.required]),
+      amountMoreSongs: new FormControl(0, [Validators.required, Validators.pattern('^[0-9]{13}$')]), // Initialize with default value
+      additionalSongs: this.fb.array([], [Validators.required])  // Initialize with an empty FormArray
     });
   }
 
   ngOnInit(){
     this.updateTotalSongAmountSelectable();
     this.generateOptions();
+
+    this.usuarioService.obtenerInfoUsuario().pipe(
+      switchMap((usuario: Usuario) => {
+        if (usuario) {
+          this.usuario = usuario;
+          console.log(usuario);
+    
+          const songs$ = this.songService.obtenerSongs().pipe(
+            map(songs => songs || []) // Ensure songs$ returns an array
+          );
+    
+          if (this.isListener(this.usuario)) {
+            const playlists$ = this.playlistService.obtenerPlaylists().pipe(
+              map(playlists => playlists || []) // Ensure playlists$ returns an array
+            );
+            const playlistsListened$ = of(this.usuario.getPlaylistsEscuchadas());
+            return forkJoin([songs$, playlists$, playlistsListened$]);
+          } else if (this.isPublisher(this.usuario)) {
+            const playlists$ = of(this.usuario.getPlaylistsCreadas());
+            return forkJoin([songs$, playlists$, []]);
+          } else {
+            return of([[], [], []] as [Song[], Playlist[], Playlist[]]);
+          }
+        } else {
+          return of([[], [], []] as [Song[], Playlist[], Playlist[]]);
+        }
+      })
+    ).subscribe(([songs, playlists, playlistsListened]: [Song[], Playlist[], Playlist[]]) => {
+      this.allSongs = songs;
+      this.playlists = playlists;
+      this.playlistsListened = playlistsListened;
+    }, error => {
+      console.error('Error fetching data:', error);
+    });
+  }
+
+  isPublisher(user: Usuario): user is Publisher {
+    return user.type() === "Publisher";
+  }
+
+  isListener(user: Usuario): user is Listener {
+    return user.type() === "Listener";
   }
 
   changeFiltro() {
@@ -97,13 +156,37 @@ export class PlaylistListComponent implements OnChanges {
 
     // Combino song1 y additionalSongs
     const songsAdded = [song1, ...additionalSongs].filter((song): song is Song => song !== undefined);
-    let playlist: Playlist = new Playlist(
-      this.newPlaylistForm.value.nombre!,
-      this.usuario!,
-      songsAdded
-    );
+    if(this.usuario){
+      this.playlistService.crearPlaylist(this.newPlaylistForm.value.nombre!, this.usuario as Publisher, songsAdded).subscribe((playlist: Playlist) => {
+        this.playlists.push(playlist);
+        this.newPlaylistForm.reset();
+      }, error => {
+        console.error('Error creating playlist:', error);
+      });
+    }
+  }
 
-    this.playlists?.push(playlist);
-    this.newPlaylistForm.reset();
+  listenPlaylist() {
+    const playlistListen = this.playlists?.find(playlist => playlist.getNombre() === this.listenPlaylistForm.value.playlistToListen);
+
+    if(this.usuario){
+      this.playlistService.listenPlaylist(this.usuario as Listener, playlistListen!).subscribe(() => {
+        this.playlists.push(playlistListen!);
+        this.listenPlaylistForm.reset();
+      }, error => {
+        console.error('Error listening playlist:', error);
+      });
+    }
+  }
+
+  addSong() {
+    if(this.usuario){
+      this.songService.crearSong(this.addSongForm.value.name!, this.addSongForm.value.artist!, this.addSongForm.value.album!).subscribe((song: Song) => {
+        this.allSongs.push(song);
+        this.addSongForm.reset();
+      }, error => {
+        console.error('Error creating song:', error);
+      });
+    }
   }
 }
