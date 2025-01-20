@@ -57,7 +57,7 @@ export class PlaylistListComponent implements OnChanges {
       nombre: new FormControl('', [Validators.required]),
       song1: new FormControl({}, [Validators.required]),
       moreSongs: new FormControl(false, [Validators.required]),
-      amountMoreSongs: new FormControl(0, [Validators.required, Validators.pattern('^[0-9]{13}$')]), // Initialize with default value
+      amountMoreSongs: new FormControl(0, [Validators.required, Validators.pattern('^[0-9]+$')]), // Initialize with default value
       additionalSongs: this.fb.array([], [Validators.required])  // Initialize with an empty FormArray
     });
   }
@@ -223,17 +223,21 @@ export class PlaylistListComponent implements OnChanges {
     this.selectedPlaylist = playlist;
 
     if(this.usuario){
-      this.apiService.deletePlaylist(this.selectedPlaylist).subscribe((ok: boolean) => {
-        if(ok){
-          console.log('Playlist deleted succesfully');
-          this.playlists = this.playlists.filter(playlist => playlist !== this.selectedPlaylist);
+      this.apiService.deletePlaylist(this.selectedPlaylist).subscribe({
+        next: (ok: boolean) => {
+          if(ok){
+            console.log('Playlist deleted successfully');
+            this.playlists = this.playlists.filter(playlist => playlist !== this.selectedPlaylist);
+          } else {
+            console.log('Problem deleting playlist');
+          }
+        },
+        error: (error) => {
+          console.error('Error deleting playlist:', error);
+        },
+        complete: () => {
           this.selectedPlaylist = '';
         }
-        else{
-          console.log('Problem deleting playlist');
-        }
-      }, error => {
-        console.error('Error deleting playlist:', error);
       });
     }
   }

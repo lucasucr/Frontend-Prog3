@@ -1,18 +1,18 @@
 export class Usuario {
-    private id: number;
+    private id?: number;
     private nombre: string;
     private apellido: string;
     private username: string;
     private password: string;
-    constructor(id: number, nombre: string, apellido: string, username: string, password: string) {
-        this.id = id;
+
+    constructor(nombre: string, apellido: string, username: string, password: string) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.username = username;
         this.password = password;
     }
     
-    getId(): number { 
+    getId(): number | undefined { 
         return this.id; 
     }
 
