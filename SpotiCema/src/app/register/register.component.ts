@@ -44,7 +44,7 @@ export class RegisterComponent {
         );
       } else {
         // Llamar al servicio API para registrar al usuario
-        this.usuarioService.crearPublisher(formValue.name, formValue.surname, formValue.username, formValue.pasword).subscribe(
+        this.usuarioService.crearPublisher(formValue.name, formValue.surname, formValue.username, formValue.password).subscribe(
           response => {
             console.log('Registro exitoso', response);
             // Redirigir al usuario a otra página, por ejemplo, a la página de login
