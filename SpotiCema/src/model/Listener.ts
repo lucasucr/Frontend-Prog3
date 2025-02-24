@@ -6,7 +6,9 @@ export class Listener extends Usuario {
     private playlistsEscuchadas: Playlist[];
 
     constructor(id: number, nombre: string, apellido: string, username: string, password: string, playlists: Playlist[]) {
-        super(id, nombre, apellido, username, password);
+        super(nombre, apellido, username, password);
+        this.setId(id);
+        this.setType("listener");
         this.playlistsEscuchadas = playlists;
     }
 
@@ -16,9 +18,5 @@ export class Listener extends Usuario {
 
     setPlaylistsEscuchadas(playlists: Playlist[]): void{
         this.playlistsEscuchadas = playlists;
-    }
-
-    override type(): string{
-        return "Listener";
     }
 }

@@ -12,6 +12,7 @@ export class UsuarioService {
   constructor(private apiService: ApiService) { }
 
   crearPublisher(nombre: string, apellido: string, username: string, password: string){
+    console.log("publisher");
     return this.apiService.postPublisher(nombre, apellido, username, password);
   }
 

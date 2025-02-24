@@ -4,6 +4,8 @@ export class Usuario {
     private apellido: string;
     private username: string;
     private password: string;
+    private type?: string;
+
 
     constructor(nombre: string, apellido: string, username: string, password: string) {
         this.nombre = nombre;
@@ -52,7 +54,11 @@ export class Usuario {
         this.password = password;
     }
 
-    type(): string {
-        return ''
+    getType(): string | undefined {
+        return this.type;
+    }
+
+    setType(type: string): void {
+        this.type = type;
     }
 }

@@ -13,9 +13,10 @@ import { SongInfoComponent } from './main/playlist-list/playlist-info/song-info/
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ProfileComponent } from './profile/profile.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { AuthInterceptor } from 'src/services/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { RegisterComponent } from './register/register.component';
   ],
   providers: [
     provideClientHydration(),
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

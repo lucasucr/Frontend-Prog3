@@ -102,11 +102,11 @@ export class PlaylistListComponent implements OnChanges {
   }
 
   isPublisher(user: Usuario): user is Publisher {
-    return user.type() === "Publisher";
+    return user.getType() === "publisher";
   }
 
   isListener(user: Usuario): user is Listener {
-    return user.type() === "Listener";
+    return user.getType() === "listener";
   }
 
   changeFiltro() {

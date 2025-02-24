@@ -13,22 +13,28 @@ import { Song } from '../model/Song';
 export class ApiService {
 
   _url: string = 'http://localhost:8081/api/'
-  u: Usuario
 
-  constructor(private http: HttpClient) { 
-    this.u = new Usuario("John","Doe","johnD","pass");
+  constructor(private http: HttpClient) {
   }
 
 
   // USUARIO
   postPublisher(nombre: string, apellido: string, username: string, password: string): Observable<Usuario> {
-    this.u = new Usuario(nombre, apellido, username, password);
-    return this.http.post<Usuario>(this._url + 'usuario/publisher', this.u);
+    return this.http.post<Usuario>(this._url + 'usuario/publisher', {
+      "nombre":nombre,
+      "apellido":apellido,
+      "username":username,
+      "password":password
+    });
   }
 
   postListener(nombre: string, apellido: string, username: string, password: string): Observable<Usuario> {
-    this.u = new Usuario(nombre, apellido, username, password)
-    return this.http.post<Usuario>(this._url + 'usuario/listener', this.u);
+    return this.http.post<Usuario>(this._url + 'usuario/listener', {
+      "nombre":nombre,
+      "apellido":apellido,
+      "username":username,
+      "password":password
+    });
   }
 
   putUsuario(usuario: Usuario): Observable<Usuario> {

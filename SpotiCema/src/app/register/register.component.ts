@@ -29,6 +29,7 @@ export class RegisterComponent {
   submitFormRegistro() {
     if (this.formRegistro.valid) {
       const formValue = this.formRegistro.value;
+      console.log("papafrita");
 
       if (this.isListener()) {
         // Llamar al servicio API para registrar al usuario
@@ -36,7 +37,7 @@ export class RegisterComponent {
           response => {
             console.log('Registro exitoso', response);
             // Redirigir al usuario a otra página, por ejemplo, a la página de login
-            this.router.navigate(['/login']);
+            this.router.navigate(['']);
           },
           error => {
             this.error = "Ocurrio un error, por favor intente nuevamente"
@@ -48,7 +49,7 @@ export class RegisterComponent {
           response => {
             console.log('Registro exitoso', response);
             // Redirigir al usuario a otra página, por ejemplo, a la página de login
-            this.router.navigate(['/login']);
+            this.router.navigate(['']);
           },
           error => {
             this.error = "Ocurrio un error, por favor intente nuevamente"

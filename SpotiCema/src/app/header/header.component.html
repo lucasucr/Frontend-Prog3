@@ -8,9 +8,9 @@
             <ng-container *ngIf="!isLogged">
                 <a class="me-3 py-2 link-body-emphasis text-decoration-none" routerLink="profile">Mis Datos</a>
             </ng-container>
-            <a class="me-3 py-2 link-body-emphasis text-decoration-none" routerLink="">Mis Playlists</a>
+            <a class="me-3 py-2 link-body-emphasis text-decoration-none" routerLink="main">Mis Playlists</a>
             <ng-container *ngIf="!isLogged">
-                <a class="me-3 py-2 link-body-emphasis text-decoration-none" routerLink="login">Iniciar sesión</a>
+                <a class="me-3 py-2 link-body-emphasis text-decoration-none" routerLink="">Iniciar sesión</a>
             </ng-container>
             <ng-container *ngIf="isLogged">
                 <a class="me-3 py-2 link-body-emphasis text-decoration-none" (click)="cerrarSesion()">Cerrar sesión</a>

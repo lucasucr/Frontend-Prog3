@@ -15,7 +15,7 @@ export class LoginComponent{
   ok: boolean = true
 
   formLogin: FormGroup = new FormGroup({
-    username: new FormControl('', [Validators.required]),
+    username: new FormControl('', [Validators.required, Validators.pattern(/\S+/)]),
     password: new FormControl('', [Validators.required])
   })
 
@@ -23,15 +23,17 @@ export class LoginComponent{
 
   login(): void {
     const val = this.formLogin.value
-    this.loginService.login(val.username, val.password).subscribe(
-      (resultado) => {
+    this.loginService.login(val.username, val.password).subscribe({
+      next: (resultado) =>{
         if(resultado) {
-          this.router.navigate(['/'])
+          this.router.navigate(['main'])
         }else {
           this.ok = false
         }
+      },
+      error: () => {
+        this.ok = false;
       }
-    )
-  
+    })
   }
 }

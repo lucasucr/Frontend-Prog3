@@ -1,4 +1,4 @@
-<ng-container *ngIf="usuario?.type() === 'Publisher'">
+<ng-container *ngIf="usuario?.getType() === 'Publisher'">
   <div class=" mb-3 d-flex justify-content-between">
     <div>
       <h5 class="fw-normal mb-3">Listado de todas las playlists creadas:</h5>
@@ -217,7 +217,7 @@
 </div>
 </ng-container>
 
-<ng-container *ngIf="usuario?.type() === 'Listener'">
+<ng-container *ngIf="usuario?.getType() === 'Listener'">
 
   <div class=" mb-3 d-flex justify-content-between">
     <div>

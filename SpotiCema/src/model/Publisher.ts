@@ -6,7 +6,9 @@ export class Publisher extends Usuario {
     private playlistsCreadas: Playlist[];
 
     constructor(id: number, nombre: string, apellido: string, username: string, password: string, playlists: Playlist[]) {
-        super(id, nombre, apellido, username, password);
+        super(nombre, apellido, username, password);
+        this.setId(id);
+        this.setType("publisher");
         this.playlistsCreadas = playlists;
     }
 
@@ -16,9 +18,5 @@ export class Publisher extends Usuario {
 
     setPlaylistsCreadas(playlists: Playlist[]): void{
         this.playlistsCreadas = playlists;
-    }
-
-    override type(): string{
-        return "Publisher";
     }
 }
